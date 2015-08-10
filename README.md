@@ -10,7 +10,7 @@ jQuery(document).on('ready', function(){
   new Three();  
 });
 
-Подписка на изменения состояния чекбоксов внутри дерева
+Подписка на изменение состояния чекбоксов внутри дерева
 
 jQuery(document).on('ready', function(){
   var tree = new Three();  
