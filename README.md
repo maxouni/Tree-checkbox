@@ -5,18 +5,18 @@ Simple checkbox tree
 
 ```html
 Инициализация
-<pre>
+<script>
 jQuery(document).on('ready', function(){
   new Three();  
 });
-</pre>
+</script>
 Подписка на изменение состояния чекбоксов внутри дерева
-<pre>
+<script>
 jQuery(document).on('ready', function(){
   var tree = new Three();  
   tree.addEventListener('CHANGE', function(){
     // Здесь, например, можно задизейблить кнопку "Сохранить" если ничего не выбрано в дереве
   });
 });
-</pre>
+</script>
 ```
