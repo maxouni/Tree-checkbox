@@ -10,6 +10,7 @@ jQuery(document).on('ready', function(){
   new Three();  
 });
 </script>
+
 Подписка на изменение состояния чекбоксов внутри дерева
 <script>
 jQuery(document).on('ready', function(){
