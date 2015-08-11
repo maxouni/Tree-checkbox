@@ -19,7 +19,9 @@
  * @param {string=} opt_tag
  * @constructor
  */
-var Three = function(root, opt_levelClass, opt_tag) {
+var Tree = function(root, opt_levelClass, opt_tag) {
+
+  if (!root) return;
   /**
    * @type {!jQuery}
    * @private
@@ -63,12 +65,12 @@ var Three = function(root, opt_levelClass, opt_tag) {
 /**
  * @type {string}
  */
-Three.EVENT_CHANGE = 'change';
+Tree.EVENT_CHANGE = 'change';
 
 /**
  * @type {string}
  */
-Three.CLASS_SEMI = 'half';
+Tree.CLASS_SEMI = 'half';
 
 
 /**
@@ -76,7 +78,7 @@ Three.CLASS_SEMI = 'half';
  * @constructor
  * @extends {jQuery.Event}
  */
-Three.ChangeEvent = function(index) {
+Tree.ChangeEvent = function(index) {
   /**
    * @type {string}
    */
@@ -92,7 +94,7 @@ Three.ChangeEvent = function(index) {
 /**
  * @enum {string}
  */
-Three.EventType = {
+Tree.EventType = {
   CHANGE: 'change'
 };
 
@@ -100,12 +102,13 @@ Three.EventType = {
 /**
  * @private
  */
-Three.prototype.init_ = function() {
+Tree.prototype.init_ = function() {
 
   for (var i = 0; i < this.levelClass_.length; i++) {
-    this.elements_[i] =
-      this.root_.find('.' + this.levelClass_[i])
-        .find(this.tag_);
+    var item = this.root_.find('.' + this.levelClass_[i]);
+
+    if (item.length)
+      this.elements_[i] = item.find(this.tag_);
   }
 
   this.attachEvents_();
@@ -114,41 +117,48 @@ Three.prototype.init_ = function() {
 /**
  * @private
  */
-Three.prototype.attachEvents_ = function() {
+Tree.prototype.attachEvents_ = function() {
   /**
-   * @type {Three}
+   * @type {Tree}
    */
   var that = this;
 
   for (var i = 0; i < this.levelClass_.length; i++) {
     this.elements_[i].each(function() {
+      jQuery(this).on(Tree.EVENT_CHANGE, function() {
 
-      $(this).on(Three.EVENT_CHANGE, function() {
+        /**
+         * @type {!jQuery}
+         */
+        var el =  jQuery(this);
         /**
          * @type {number}
          */
-        var id = parseInt($(this).attr('data-id'), 10);
+        var id = parseInt(el.attr('data-id'), 10);
         /**
          * @type {number}
          */
-        var idParent = parseInt($(this).attr('data-parent'), 10) ;
+        var idParent = parseInt(el.attr('data-parent'), 10) ;
 
+        /**
+         * @type {*}
+         */
         var level = that.getLevelbyElement_($(this));
 
         that.childInit_(
           parseInt(level, 10),
           id,
-          jQuery(this).is(':checked')
+          el.is(':checked')
         );
 
         that.parentInit_(
           parseInt(level, 10),
           idParent,
-          jQuery(this).is(':checked')
+          el.is(':checked')
         );
 
         that.eventsDispatcher_.trigger(
-          new Three.ChangeEvent(id)
+          new Tree.ChangeEvent(id)
         );
       });
     })
@@ -160,7 +170,7 @@ Three.prototype.attachEvents_ = function() {
  * @returns {*}
  * @private
  */
-Three.prototype.getLevelbyElement_ = function(element) {
+Tree.prototype.getLevelbyElement_ = function(element) {
   
   for (var i = 0; i < this.levelClass_.length; i++) {
     if (element.parents('.' + this.levelClass_[i]).length) {
@@ -176,19 +186,19 @@ Three.prototype.getLevelbyElement_ = function(element) {
  * @param {boolean} checked
  * @private
  */
-Three.prototype.childInit_ = function (level, id, checked) {
+Tree.prototype.childInit_ = function (level, id, checked) {
   /**
-   * @type {Three}
+   * @type {Tree}
    */
   var that = this;
 
   for ( var i = level; i < this.levelClass_.length; i++ ) {
     var element = this.elements_[i].filter('[data-parent="' + id + '"]');
-    this.elements_[i].filter('[data-id="' + id + '"]').removeClass(Three.CLASS_SEMI);
+    this.elements_[i].filter('[data-id="' + id + '"]').removeClass(Tree.CLASS_SEMI);
     
     if (element.length) {
       element.each(function () {
-        jQuery(this).removeClass(Three.CLASS_SEMI).prop('checked', checked);
+        jQuery(this).removeClass(Tree.CLASS_SEMI).prop('checked', checked);
         that.childInit_(
           parseInt(i, 10), 
           parseInt(jQuery(this).attr('data-id'), 10), 
@@ -204,10 +214,10 @@ Three.prototype.childInit_ = function (level, id, checked) {
  * @param {boolean} checked
  * @private
  */
-Three.prototype.parentInit_ = function (level, id, checked) {
+Tree.prototype.parentInit_ = function (level, id, checked) {
 
   /**
-   * @type {Three}
+   * @type {Tree}
    */
   var that = this;
   /**
@@ -222,15 +232,15 @@ Three.prototype.parentInit_ = function (level, id, checked) {
     if (element.length) {
       element.each(function () {
         if (currentCheckbox.length == currentCheckbox.filter(':checked').length) {
-          $(this).prop('checked', true).removeClass(Three.CLASS_SEMI);
+          $(this).prop('checked', true).removeClass(Tree.CLASS_SEMI);
         } else {
           if (currentCheckbox.length - currentCheckbox.filter(':checked').length == currentCheckbox.length) {
-            if (!currentCheckbox.filter('.' + Three.CLASS_SEMI).length)
-              $(this).prop('checked', false).removeClass(Three.CLASS_SEMI);
+            if (!currentCheckbox.filter('.' + Tree.CLASS_SEMI).length)
+              $(this).prop('checked', false).removeClass(Tree.CLASS_SEMI);
             else
-              $(this).prop('checked', false).addClass(Three.CLASS_SEMI);
+              $(this).prop('checked', false).addClass(Tree.CLASS_SEMI);
           } else {
-            $(this).prop('checked', false).addClass(Three.CLASS_SEMI);
+            $(this).prop('checked', false).addClass(Tree.CLASS_SEMI);
           }
         }
         that.parentInit_(parseInt(i, 10), parseInt($(this).attr('data-parent'), 10), checked);
@@ -240,9 +250,9 @@ Three.prototype.parentInit_ = function (level, id, checked) {
 };
 
 /**
- * @param {Three.EventType} eventType
+ * @param {Tree.EventType} eventType
  * @param {function(!jQuery.event)} callback
  */
-Three.prototype.addEventListener = function(eventType, callback) {
+Tree.prototype.addEventListener = function(eventType, callback) {
   this.eventsDispatcher_.bind(eventType, callback);
 };

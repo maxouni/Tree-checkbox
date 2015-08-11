@@ -1,0 +1,33 @@
+<!DOCTYPE html><!-- (c) Art. Lebedev Studio | http://www.artlebedev.ru/ -->
+<html class="no-retina chrome webkit windows desktop js">
+<head>
+  <title>Tree checkbox / Дерево чекбоксов</title>
+  <link href="../css/style.css" media="all" rel="stylesheet" />
+</head>
+<body>
+
+<div class="columns">
+  <div class="column parent-1">
+    <div class="row"><input type="checkbox" id="checkbox_0" data-id="0" /><label for="checkbox_0">Родитель 0</label></div>
+  </div>
+  <div class="column parent-2">
+    <div class="row"><input type="checkbox" data-id="1" data-parent="0" id="checkbox_1" /><label for="checkbox_1">Чекбокс 1</label></div>
+    <div class="row"><input type="checkbox" data-id="2" data-parent="0" id="checkbox_2" /><label for="checkbox_2">Чекбокс 2</label></div>
+    <div class="row"><input type="checkbox" data-id="3" data-parent="0" id="checkbox_3" /><label for="checkbox_3">Родитель 3</label></div>
+  </div>
+  <div class="column parent-3">
+    <div class="row"><input type="checkbox" data-id="4" id="checkbox_4" data-parent="3" /><label for="checkbox_4">Чекбокс 4</label></div>
+    <div class="row"><input type="checkbox" data-id="5" id="checkbox_5" data-parent="3" /><label for="checkbox_5">Родитель 5</label></div>
+    <div class="row"><input type="checkbox" data-id="6" id="checkbox_6" data-parent="3" /><label for="checkbox_6">Родитель 6</label></div>
+  </div>
+  <div class="column parent-4">
+    <div class="row"><input type="checkbox" data-id="7" id="checkbox_7" data-parent="5" /><label for="checkbox_7">Чекбокс 7</label></div>
+    <div class="row"><input type="checkbox" data-id="8" id="checkbox_8" data-parent="6" /><label for="checkbox_8">Чекбокс 8</label></div>
+    <div class="row"><input type="checkbox" data-id="9" id="checkbox_9" data-parent="6" /><label for="checkbox_9">Чекбокс 9</label></div>
+  </div>
+</div>
+<script src="../js/jquery-1.11.1.min.js"></script>
+<script src="../js/parent-child.js"></script>
+<script src="../js/run.js"></script>
+</body>
+</html>
